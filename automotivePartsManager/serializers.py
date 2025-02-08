@@ -16,20 +16,26 @@ class UserSerializer(serializers.ModelSerializer):
         )
         return user
 
-class PartSerializer(serializers.ModelSerializer):
+class PartListSerializer(serializers.ModelSerializer):
+    """ Serializer para listagem de peças (GET /api/parts/) """
     class Meta:
         model = Part
-        fields = '__all__'
+        fields = ('name', 'details', 'price', 'quantity')
 
 class CarModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = CarModel
         fields = '__all__'
 
+class PartDetailSerializer(serializers.ModelSerializer):
+    """ Serializer para detalhar uma peça (GET /api/parts/{id}/) """
+    car_models = CarModelSerializer(source='partcarmodel_set.car_model', many=True, read_only=True)
+
+    class Meta:
+        model = Part
+        fields = '__all__'
+
 class PartCarModelSerializer(serializers.ModelSerializer):
-    part = PartSerializer(read_only=True)
-    car_model = CarModelSerializer(read_only=True)
-    
     class Meta:
         model = PartCarModel
         fields = '__all__'

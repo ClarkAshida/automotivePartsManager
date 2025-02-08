@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'automotivePartsManager',
     'rest_framework_simplejwt',
     'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -129,9 +130,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Configurações do Django Rest Framework
 REST_FRAMEWORK = {
+    # Configuração de Autenticação Global por JWT
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    # Configuração de Paginação Global dos endpoints de listagem
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 10,
+    # Configuração de Filtros Globais
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+
 }
 
 #Configura o tempo de validade dos tokens JWT

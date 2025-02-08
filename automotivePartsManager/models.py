@@ -36,20 +36,20 @@ class CustomUser(AbstractUser):
         return f"{self.username} ({self.role})"
 
 class Part(models.Model):
-    part_number = models.CharField(max_length=50)
-    name = models.CharField(max_length=100)
+    part_number = models.CharField(max_length=50, blank=False)
+    name = models.CharField(max_length=100, blank=False)
     details = models.TextField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.IntegerField()
+    price = models.DecimalField(max_digits=10, decimal_places=2, blank=False)
+    quantity = models.IntegerField(blank=False, default=0)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.name} ({self.part_number})"
     
 class CarModel(models.Model):
-    name = models.CharField(max_length=255)
-    manufacturer = models.CharField(max_length=255)
-    year = models.IntegerField()
+    name = models.CharField(max_length=255, blank=False)
+    manufacturer = models.CharField(max_length=255, blank=False)
+    year = models.IntegerField(blank=False)
 
     def __str__(self):
         return f"{self.manufacturer} {self.name} ({self.year})"
