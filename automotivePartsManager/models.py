@@ -43,6 +43,9 @@ class Part(models.Model):
     quantity = models.IntegerField(blank=False, default=0)
     updated_at = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return f"{self.name} ({self.part_number})"
     
@@ -50,6 +53,9 @@ class CarModel(models.Model):
     name = models.CharField(max_length=255, blank=False)
     manufacturer = models.CharField(max_length=255, blank=False)
     year = models.IntegerField(blank=False)
+
+    class Meta:
+        ordering = ['manufacturer', 'name', 'year']
 
     def __str__(self):
         return f"{self.manufacturer} {self.name} ({self.year})"
