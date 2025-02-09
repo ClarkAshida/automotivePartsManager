@@ -56,14 +56,14 @@ class PartCarModelViewSet(viewsets.ModelViewSet):
         car_model_ids = request.data.get('car_model_ids', [])
 
         if not part_ids or not car_model_ids:
-            return Response({"error": "part_ids e car_model_ids são obrigatórios"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "part_ids e car_model_ids são obrigatórios."}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             parts = Part.objects.filter(id__in=part_ids)
             car_models = CarModel.objects.filter(id__in=car_model_ids)
 
             if len(parts) != len(part_ids):
-                return Response({"error": "Essa peça não existe"}, status=status.HTTP_404_NOT_FOUND)
+                return Response({"error": "Essa peça não existe."}, status=status.HTTP_404_NOT_FOUND)
             elif len(car_models) != len(car_model_ids):
                 return Response({"error": "Esse modelo de carro não existe"}, status=status.HTTP_404_NOT_FOUND)
 

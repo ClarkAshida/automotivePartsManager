@@ -72,7 +72,7 @@ class PartViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Part.objects.get(id=3).name, 'Amortecedor')
 
-    # Teste de criação de peças com usuário com dados inválidos (role: 'admin')
+    # Teste de criação de peças com usuário admin e com dados inválidos (role: 'admin')
     def test_create_part_with_invalid_data_as_admin(self):
         access_token = AccessToken.for_user(self.admin)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
@@ -85,6 +85,38 @@ class PartViewTests(APITestCase):
         response = self.client.post(self.url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertEqual(Part.objects.count(), 2)
+
+    # Teste para criação de peça com usuário admin e com preço menor que zero (role: 'admin')
+    def test_create_part_with_price_less_than_zero_as_admin(self):
+        access_token = AccessToken.for_user(self.admin)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
+        data = {
+            'part_number': '54321',
+            'name': 'Amortecedor',
+            'details': 'Amortecedor dianteiro',
+            'price': -1200.50,
+            'quantity': 10
+        }
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Part.objects.count(), 2)
+        self.assertIn("O preço deve ser maior que zero.", response.data['price'])
+
+    # Teste para criação de peça com usuário admin e com quantidade menor que zero (role: 'admin')
+    def test_create_part_with_quantity_less_than_zero_as_admin(self):
+        access_token = AccessToken.for_user(self.admin)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
+        data = {
+            'part_number': '54321',
+            'name': 'Amortecedor',
+            'details': 'Amortecedor dianteiro',
+            'price': 1200.50,
+            'quantity': -10
+        }
+        response = self.client.post(self.url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(Part.objects.count(), 2)
+        self.assertIn("A quantidade não pode ser negativa.", response.data['quantity'])
 
     # Teste de update de peças com usuário admin autenticado (role: 'admin')
     def test_update_part_as_admin(self):

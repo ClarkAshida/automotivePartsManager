@@ -112,6 +112,17 @@ class PartCarModelViewTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(PartCarModel.objects.filter(part=self.part2, car_model=self.car_model2).exists())
 
+    # Teste de usuário admin criar associação sem part_id e car_model_id
+    def test_admin_associate_parts_to_car_models_without_data(self):
+        access_token = AccessToken.for_user(self.admin)
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
+        
+        data = {}
+
+        response = self.client.post(self.associate_parts_to_car_models_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("part_ids e car_model_ids são obrigatórios.", response.data['error'])
+        
     # Teste de usuário admin criar associação com dados inválidos (part_id é obrigatório)
     def test_admin_associate_parts_to_car_models_with_invalid_data(self):
         access_token = AccessToken.for_user(self.admin)
@@ -123,6 +134,7 @@ class PartCarModelViewTests(APITestCase):
 
         response = self.client.post(self.associate_parts_to_car_models_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("Essa peça não existe.", response.data['error'])
 
     # Teste de usuário admin criar associação com dados inválidos (car_model_id é obrigatório)
     def test_admin_associate_parts_to_car_models_with_invalid_data(self):
@@ -135,6 +147,7 @@ class PartCarModelViewTests(APITestCase):
 
         response = self.client.post(self.associate_parts_to_car_models_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("Esse modelo de carro não existe", response.data['error'])
 
     # Teste de usuário admin criar associação com dados inválidos (part_id não existe)
     def test_admin_associate_parts_to_car_models_with_invalid_data(self):
