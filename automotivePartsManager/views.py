@@ -12,6 +12,10 @@ from rest_framework import status
 from rest_framework import generics
 
 class RegisterUserView(generics.CreateAPIView):
+    '''
+    Descrição da ViewSet:
+    - Endpoint para registro de usuários.
+    '''
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
