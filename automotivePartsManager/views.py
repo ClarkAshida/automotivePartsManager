@@ -30,7 +30,6 @@ class PartViewSet(viewsets.ModelViewSet):
             return PartDetailSerializer
         return PartListSerializer  # GET (listar todas as peças)
 
-    # Adicionar filtragem por código, nome e preço
     filter_backends = [DjangoFilterBackend, filters.SearchFilter, filters.OrderingFilter]
     filterset_fields = ['part_number', 'name', 'price']
     search_fields = ['name', 'details']
