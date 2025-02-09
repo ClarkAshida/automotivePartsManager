@@ -11,11 +11,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
 
-
 class RegisterUserView(generics.CreateAPIView):
     queryset = CustomUser.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [AllowAny] # Qualquer um pode se registrar (apenas users comuns), preciso ver como cadastrar um usuário admin
+    permission_classes = [AllowAny]
 
 class UserManagementViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
