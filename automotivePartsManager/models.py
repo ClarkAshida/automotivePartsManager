@@ -66,6 +66,7 @@ class PartCarModel(models.Model):
 
     class Meta:
         unique_together = ("part", "car_model")
+        ordering = ['part', 'car_model']
 
     def __str__(self):
         return f"{self.part.name} - {self.car_model.name}"

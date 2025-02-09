@@ -49,7 +49,7 @@ class CarModelViewSet(viewsets.ModelViewSet):
 class PartCarModelViewSet(viewsets.ModelViewSet):
     queryset = PartCarModel.objects.all()
     serializer_class = PartCarModelSerializer
-    permission_classes = [IsAuthenticated, IsAdmin]
+    permission_classes = [IsAuthenticated, IsAdminOrReadOnly]
     serializer_class = PartCarModelSerializer
 
     @action(detail=False, methods=['post'], url_path='associate')
