@@ -10,6 +10,11 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import generics
+from rest_framework.views import APIView
+from rest_framework.parsers import MultiPartParser
+from rest_framework import status
+from django.core.files.storage import default_storage
+from .tasks import process_csv
 
 class RegisterUserView(generics.CreateAPIView):
     '''
@@ -274,14 +279,19 @@ class PartCarModelViewSet(viewsets.ModelViewSet):
             ```json
             [
                 {
-                    "id": 1,
-                    "part": 3,
-                    "car_model": 2
-                },
-                {
-                    "id": 2,
-                    "part": 4,
-                    "car_model": 2
+                    "id": 3,
+                    "part": {
+                        "name": "Correia dentada",
+                        "details": "Correia reforçada para motores de alto desempenho.",
+                        "price": "80.90",
+                        "quantity": 20
+                    },
+                    "car_model": {
+                        "id": 2,
+                        "name": "Civic",
+                        "manufacturer": "Honda",
+                        "year": 2022
+                    }
                 }
             ]
             ```
@@ -449,3 +459,68 @@ class PartCarModelViewSet(viewsets.ModelViewSet):
 
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        
+class CSVUploadView(APIView):
+    '''
+    API para Upload de Arquivo CSV para cadastro de peças
+
+    ### Descrição
+    - Esta API permite o envio de um arquivo CSV para cadastro de peças.
+    - **Permissões**:
+        - Apenas administradores.
+        
+    ### Endpoints
+    - `POST /upload-csv/` - Enviar um arquivo CSV.
+
+    ### Parâmetros (POST)
+    | Nome | Tipo | Obrigatório | Descrição   | Exemplo     |
+    |------|------|-------------|-------------|-------------|
+    | file | file | Sim         | Arquivo CSV | "peças.csv" |
+
+    ### O CSV deverá seguir o seguinte formato:
+    | part_number | name          | details           | price | quantity |
+    |-------------|---------------|-------------------|-------|----------|
+
+    ### Tipos de Dados
+    | Nome        | Tipo   | Obrigatório | Descrição               | Exemplo         |
+    |-------------|--------|-------------|-------------------------|-----------------|
+    | part_number | string | Sim         | Número da peça.         | "ABC123"        |
+    | name        | string | Sim         | Nome da peça.           | "Parafuso"      |
+    | details     | string | Não         | Detalhes da peça.       | "Parafuso 10mm" |
+    | price       | float  | Sim         | Preço da peça.          | 15.99           |
+    | quantity    | int    | Sim         | Quantidade em estoque.  | 100             |
+
+    ### Respostas
+    - **202 (Accepted)**: Arquivo enviado e processamento iniciado.
+        ```json
+        {
+            "message": "Arquivo enviado e processamento iniciado"
+        }
+        ```
+    - **400 (Bad Request)**: Arquivo não fornecido.
+        ```json
+        {
+            "error": "Arquivo não fornecido"
+        }
+        ```
+
+    ### Observações
+    - O processamento do arquivo é feito de forma assíncrona via Celery.
+    '''
+    parser_classes = [MultiPartParser]
+    permission_classes = [IsAuthenticated, IsAdmin]
+
+    def post(self, request, *args, **kwargs):
+        """
+        Recebe um arquivo CSV e inicia o processamento assíncrono via Celery.
+        """
+        file = request.FILES.get('file')
+        if not file:
+            return Response({"error": "Arquivo não fornecido"}, status=status.HTTP_400_BAD_REQUEST)
+
+        file_path = default_storage.save(f"uploads/{file.name}", file)
+        with default_storage.open(file_path, 'rb') as f:
+            file_data = f.read()
+            process_csv.delay(file_data)
+
+        return Response({"message": "Arquivo enviado e processamento iniciado"}, status=status.HTTP_202_ACCEPTED)

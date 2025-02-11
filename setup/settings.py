@@ -143,9 +143,21 @@ REST_FRAMEWORK = {
 
 }
 
-#Configura o tempo de validade dos tokens JWT
+# Configura o tempo de validade dos tokens JWT
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),  # Token válido por 1 hora
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),  # Refresh token válido por 1 dia
     'AUTH_HEADER_TYPES': ('Bearer',),  # O token será enviado no cabeçalho Authorization como "Bearer <token>"
+}
+
+# Configuração do Celery
+CELERY_BROKER_URL = "redis://localhost:6379/0"
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+# Configuração do Cache com Redis
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.redis.RedisCache",
+        "LOCATION": "redis://localhost:6379/1",
+    }
 }
