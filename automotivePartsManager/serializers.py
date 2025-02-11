@@ -49,9 +49,11 @@ class PartDetailSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class PartCarModelSerializer(serializers.ModelSerializer):
+    part = PartListSerializer(read_only=True)
+    car_model = CarModelSerializer(read_only=True)
     class Meta:
         model = PartCarModel
-        fields = '__all__'
+        fields = ['id', 'part', 'car_model']
     
     def validate(self, data):
         if PartCarModel.objects.filter(part=data['part'], car_model=data['car_model']).exists():

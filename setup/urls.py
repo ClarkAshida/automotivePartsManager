@@ -7,11 +7,11 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Documentação API",
+      title="Sistema de Gerenciamento de Peças Automotivas",
       default_version='v1',
-      description="Documentação da API da Escola",
+      description="Documentação da API para o teste técnico da Hubbi.",
       terms_of_service="https://www.google.com/policies/terms/",
-      contact=openapi.Contact(email="lais@lais.com"),
+      contact=openapi.Contact(email="flavioalexandrework@gmail.com"),
       license=openapi.License(name="BSD License"),
    ),
    public=True,
