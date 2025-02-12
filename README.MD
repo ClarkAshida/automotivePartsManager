@@ -1,8 +1,10 @@
 # Sistema de Consulta de Peças Automotivas
 
-Este repositório contém o backend do Sistema de Consulta de Peças Automotivas para o desafio técnico da Hubbi. Siga as instruções abaixo para instalar e configurar o ambiente de desenvolvimento localmente.
+Bem-vindo ao repositório do Sistema de Consulta de Peças Automotivas! Este projeto foi desenvolvido como parte do desafio técnico da Hubbi e tem como objetivo facilitar a busca e gestão de peças automotivas. 
 
 ## Instalação
+
+Siga as instruções abaixo para instalar e configurar o ambiente de desenvolvimento localmente.
 
 ### 1. Clonar o Repositório
 
@@ -52,23 +54,42 @@ Com o ambiente virtual ativado, instale todas as dependências necessárias para
 pip install -r requirements.txt
 ```
 
-### 5. Configurar o Banco de Dados
+### 5. Configurar o projeto (Sem Docker).
 
-Prepare o banco de dados executando as migrações:
+Siga as instruções abaixo para configurar o projeto sem o Docker.
 
-#### Criar as migrações (se necessário):
+### Observações:
+
+Para configurar o projeto sem o uso de Docker, é necessário ter instalado na sua máquinas as dependências abaixo:
+
+- **Redis**: Utilizado como _Broker_ para o Celery, permitindo a execução de tarefas assíncronas.
+- **PostgreSQL**: Banco de dados relacional utilizado para armazenar as informações do sistema.
+- **Python**: Interpretador de código necessário para executar o projeto e suas dependências.
+
+### Configurar o Banco de Dados (PostgreSQL)
+
+O projeto utiliza PostgreSQL como banco de dados. Certifique-se de que ele esteja instalado e configure as variáveis de ambiente para conexão:
+
+```bash
+DB_NAME=NOME_BANCO_DE_DADOS
+DB_USER=NOME_USUARIO
+DB_PASSWORD=SENHA
+DB_HOST=localhost
+DB_PORT=5432
+```
+
+adicione as configurações dentro de um arquivo .env na raíz do projeto.
+
+#### Criar as migrações do Banco de Dados
+
+Após configurar o banco, aplique as migrações para criar as tabelas:
 
 ```bash
 python manage.py makemigrations
-```
-
-#### Aplicar as migrações:
-
-```bash
 python manage.py migrate
 ```
 
-### 6. Criar um Superusuário
+### Criar um Superusuário
 
 Para acessar o painel administrativo do Django, você precisa criar um superusuário:
 
@@ -78,7 +99,7 @@ python manage.py createsuperuser
 
 Siga as instruções no terminal para definir o nome de usuário, e-mail e senha.
 
-### 7. Rodar o Servidor de Desenvolvimento
+### Iniciar o Servidor de Desenvolvimento
 
 Agora, você pode rodar o servidor de desenvolvimento para testar a aplicação localmente:
 
@@ -88,20 +109,29 @@ python manage.py runserver
 
 A aplicação estará disponível em http://127.0.0.1:8000/ por padrão.
 
-### 7.1 Rodando o Servidor de Desenvolvimento com o Docker
+### Execução de Tarefas Assíncronas
 
-O docker te permite acessar o banco de dados do projeto de forma fácil e sem ter que instalar o Postgresql. Basta aplicar o comando:
+#### 1. Iniciar o Servidor Redis
 
-```bash
-sudo docker-compose build
-```
+O Redis é utilizado como broker para o Celery. Certifique-se de que ele está instalado e execute:
 
 ```bash
-sudo docker-compose up
+redis-server
 ```
 
-e em outro terminal aplicar o comando de inicialização do servidor:
+#### 2. Iniciar o Celery Worker
+
+O celery permite a execução de comandos de forma assíncrona, possibilitando o cadastro de peças automotivas através do upload de arquivos CSV.
 
 ```bash
-python manage.py runserver
+celery -A setup worker --loglevel=info
 ```
+
+### Configuração finalizada
+
+Dessa forma, o projeto estará devidamente configurado e pronto para ser executado.
+
+### 6. Configuração do projeto (Com Docker).
+
+O docker te permite configurar o projeto de forma fácil e sem ter que instalar as dependências necessárias na sua máquina. Basta seguir os comandos abaixo:
+

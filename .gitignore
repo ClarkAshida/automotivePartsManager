@@ -129,12 +129,15 @@ celerybeat.pid
 # IS IT NECESSARY?
 tmp
 uploads
+dump.rdb
 
 # SageMath parsed files
 *.sage.py
 
 # Environments
 .env
+.env.production
+.env.development
 .venv
 env/
 venv/
