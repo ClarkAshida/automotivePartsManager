@@ -109,9 +109,7 @@ python manage.py runserver
 
 A aplicação estará disponível em http://127.0.0.1:8000/ por padrão.
 
-### Execução de Tarefas Assíncronas
-
-#### 1. Iniciar o Servidor Redis
+#### Iniciar o Servidor Redis
 
 O Redis é utilizado como broker para o Celery. Certifique-se de que ele está instalado e execute:
 
@@ -119,7 +117,7 @@ O Redis é utilizado como broker para o Celery. Certifique-se de que ele está i
 redis-server
 ```
 
-#### 2. Iniciar o Celery Worker
+#### Iniciar o Celery Worker
 
 O celery permite a execução de comandos de forma assíncrona, possibilitando o cadastro de peças automotivas através do upload de arquivos CSV.
 
@@ -133,5 +131,61 @@ Dessa forma, o projeto estará devidamente configurado e pronto para ser executa
 
 ### 6. Configuração do projeto (Com Docker).
 
-O docker te permite configurar o projeto de forma fácil e sem ter que instalar as dependências necessárias na sua máquina. Basta seguir os comandos abaixo:
+O docker te permite configurar o projeto de forma fácil e sem ter que instalar as dependências necessárias na sua máquina. É importante ressaltar que você precisa ter o Docker instalado localmente para rodar os comandos abaixo:
 
+### Alterar a variável de ambiente HOST
+
+A variável de ambiente definida por _db_ permite acessar o banco de dados através de uma _imagem_ do Postgresql.
+
+```bash
+DB_HOST=db
+```
+
+```bash
+CELERY_BROKER_URL=redis://redis:6379/0
+```
+
+Talvez seja necessário reiniciar o VSCode em caso de conflito ou erro na leitura das variáveis.
+
+### Executar o arquivo Docker Compose
+
+O arquivo Docker Compose contém todos os comandos necessários para inicializar a aplicação, construindo _containers_ do servidor web Django, Banco de Dados Postgresql, servidor Redis e Celery.
+
+```bash
+docker-compose up --build -d
+```
+
+Você pode verificar o estado de criação dos containers com o comando abaixo:
+
+```bash
+docker ps
+```
+
+### Acessar o banco de dados com o usuário admin padrão
+
+Ao inicializar o projeto com o Docker, um usuário admin padrão é criado com as credenciais abaixo, sendo possível autenticar os end points do projeto através do token JWT gerado na autenticação.
+
+```bash
+{
+    "email":"admin@hubbi.com",
+    "password":"Admin!123"
+}
+```
+
+### 7. Inicializar a rotina de testes
+
+Executar a rotina de testes garante que todas as funcionalidades do sistema estão funcionando corretamente e que novas alterações não introduziram bugs. Para rodar os testes, utilize o comando abaixo, que executará todos os testes definidos no projeto:
+
+Com docker:
+
+```bash
+docker-compose exec web python manage.py test
+```
+
+Sem Docker:
+
+```bash
+python manage.py test
+```
+
+Isso ajudará a manter a integridade e a confiabilidade do sistema.
