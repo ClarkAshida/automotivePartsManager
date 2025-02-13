@@ -68,14 +68,26 @@ Para configurar o projeto sem o uso de Docker, é necessário ter instalado na s
 
 ### Configurar o Banco de Dados (PostgreSQL)
 
-O projeto utiliza PostgreSQL como banco de dados. Certifique-se de que ele esteja instalado e configure as variáveis de ambiente para conexão:
+O projeto utiliza PostgreSQL como banco de dados. Certifique-se de que ele esteja instalado e configure as variáveis de ambiente para conexão. Segue abaixo um exemplo de .env:
 
 ```bash
+# Configurações do Banco de Dados
 DB_NAME=NOME_BANCO_DE_DADOS
 DB_USER=NOME_USUARIO
 DB_PASSWORD=SENHA
 DB_HOST=localhost
 DB_PORT=5432
+
+# Configurações de segurança do Django
+DJANGO_SECRET_KEY='SEU_SEGREDO'
+
+# URL do Servidor Redis
+CELERY_BROKER_URL=redis://redis:6379/0
+
+# Credenciais para o Django Admin
+DJANGO_SUPERUSER_USERNAME=USUARIO_ADMIN
+DJANGO_SUPERUSER_EMAIL=EMAIL_ADMIN
+DJANGO_SUPERUSER_PASSWORD=SENHA_ADMIN
 ```
 
 adicione as configurações dentro de um arquivo .env na raíz do projeto.
@@ -139,10 +151,6 @@ A variável de ambiente definida por _db_ permite acessar o banco de dados atrav
 
 ```bash
 DB_HOST=db
-```
-
-```bash
-CELERY_BROKER_URL=redis://redis:6379/0
 ```
 
 Talvez seja necessário reiniciar o VSCode em caso de conflito ou erro na leitura das variáveis.
