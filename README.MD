@@ -82,7 +82,8 @@ DB_PORT=5432
 DJANGO_SECRET_KEY='SEU_SEGREDO'
 
 # URL do Servidor Redis
-CELERY_BROKER_URL=redis://redis:6379/0
+CELERY_BROKER_URL=redis://localhost:6379/0
+REDIS_URL=redis://localhost:6379/1
 
 # Credenciais para o Django Admin
 DJANGO_SUPERUSER_USERNAME=USUARIO_ADMIN
@@ -145,12 +146,19 @@ Dessa forma, o projeto estará devidamente configurado e pronto para ser executa
 
 O docker te permite configurar o projeto de forma fácil e sem ter que instalar as dependências necessárias na sua máquina. É importante ressaltar que você precisa ter o Docker instalado localmente para rodar os comandos abaixo:
 
-### Alterar a variável de ambiente HOST
+### Alterar as variáveis de ambiente
 
-A variável de ambiente definida por _db_ permite acessar o banco de dados através de uma _imagem_ do Postgresql.
+A variável de ambiente definida por _db_ permite acessar o banco de dados através de uma _imagem_ do Postgresql. 
 
 ```bash
 DB_HOST=db
+```
+
+Enquanto a variável de ambiente do Celery deve acessar o _container_ do Redis que está sendo executado pelo Docker.
+
+```bash
+CELERY_BROKER_URL=redis://redis:6379/0
+REDIS_URL=redis://redis:6379/1
 ```
 
 Talvez seja necessário reiniciar o VSCode em caso de conflito ou erro na leitura das variáveis.

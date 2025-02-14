@@ -130,6 +130,7 @@ celerybeat.pid
 tmp
 uploads
 dump.rdb
+staticfiles
 
 # SageMath parsed files
 *.sage.py
