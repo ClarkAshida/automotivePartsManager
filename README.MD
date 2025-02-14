@@ -168,7 +168,7 @@ Talvez seja necessário reiniciar o VSCode em caso de conflito ou erro na leitur
 O arquivo Docker Compose contém todos os comandos necessários para inicializar a aplicação, construindo _containers_ do servidor web Django, Banco de Dados Postgresql, servidor Redis e Celery.
 
 ```bash
-docker-compose up --build -d
+docker-compose up --build
 ```
 
 Você pode verificar o estado de criação dos containers com o comando abaixo:

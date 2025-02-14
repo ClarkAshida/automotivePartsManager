@@ -93,6 +93,21 @@ DATABASES = {
     }
 }
 '''
+SWAGGER_SETTINGS = {
+    "SECURITY_DEFINITIONS": {
+        "JWT": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header",
+            "description": "Adicione apenas o Token JWT gerado na rota /api/token/ sem o prefixo 'Bearer'.",
+        }
+    },
+    "USE_SESSION_AUTH": False,
+    "PERSIST_AUTH": True,
+    "REFETCH_SCHEMA_WITH_AUTH": True,
+    "LOGIN_URL": "/api/token/",
+    "DEFAULT_API_KEY": "JWT",
+}
 
 # Configuração do banco de dados PostgreSQL
 DATABASES = {
@@ -160,7 +175,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
     # Configuração de Filtros Globais
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
-
 }
 
 # Configura o tempo de validade dos tokens JWT
