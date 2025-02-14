@@ -80,15 +80,6 @@ DB_PORT=5432
 
 # Configurações de segurança do Django
 DJANGO_SECRET_KEY='SEU_SEGREDO'
-
-# URL do Servidor Redis
-CELERY_BROKER_URL=redis://localhost:6379/0
-REDIS_URL=redis://localhost:6379/1
-
-# Credenciais para o Django Admin
-DJANGO_SUPERUSER_USERNAME=USUARIO_ADMIN
-DJANGO_SUPERUSER_EMAIL=EMAIL_ADMIN
-DJANGO_SUPERUSER_PASSWORD=SENHA_ADMIN
 ```
 
 adicione as configurações dentro de um arquivo .env na raíz do projeto.
